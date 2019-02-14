@@ -125,6 +125,21 @@ public class DeployTest extends AbstractWildFlyServerMojoTest {
     }
 
     @Test
+    public void testDeployWithIncludeFilter() throws Exception {
+        // Make sure the archive is not deployed
+        if (deploymentManager.hasDeployment(DEPLOYMENT_NAME)) {
+            deploymentManager.undeploy(UndeployDescription.of(DEPLOYMENT_NAME));
+        }
+
+        final AbstractDeployment deployMojo = lookupMojoAndVerify("deploy", "deploy-webarchive-with-include-filter-pom.xml");
+
+        deployMojo.execute();
+
+        // Verify deployed
+        assertTrue("Deployment " + DEPLOYMENT_NAME + " should not be deployed", !deploymentManager.hasDeployment(DEPLOYMENT_NAME));
+    }
+
+    @Test
     public void testRedeploy() throws Exception {
 
         // Make sure the archive is deployed
